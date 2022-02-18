@@ -1,4 +1,4 @@
 <?php
-  include_once("index/index.html");
+  include_once("index.html");
 
 ?>
