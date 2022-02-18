@@ -33,16 +33,16 @@ h1 {
 }
 
 .card::after {
-	content: "";
+  content: "";
   display: block;
-  width: 50%;
-  height: 45%;
+  width: 70%;
+  height: 60%;
   border-radius: 100%;
-  background-color: #fff;
-  opacity: .7;
+  background-color: rgb(199, 199, 199);
+  opacity: .8;
   position: absolute;
-  top: 15%;
-  left: 25%;
+  top: 5%;
+  left: 17%;
 }
 
 .steel {
