@@ -6,10 +6,16 @@ const generatePokemonsPromises = () => Array(150).fill().map((_, index) =>
 const generateHTML = pokemons => pokemons.reduce((accumulator, {
     name,
     id,
-    types
+    types, 
+    abilities,
+    weight,
+    height,
+    order,
+    base_experience
 }) => {
 
     const ElementeTypes = types.map(typeInfo => typeInfo.type.name);
+    const AbilitiesTypes = abilities.map(typeInfo => typeInfo.ability.name);
 
     //     if (id == 1) {
     //         accumulator += `
@@ -80,19 +86,17 @@ const generateHTML = pokemons => pokemons.reduce((accumulator, {
                     <div class="status">
                         <h3>Status</h3>
                         <ul>
-                            <li>HP: 300</li>
-                            <li>Ataque: 600</li>
-                            <li>Defesa: 500</li>
-                            <li>Velocidade: 300</li>
-                            <li>Total: 1.700</li>
+                            <li>Força: ${base_experience}</li>
+                            <li>Peso: ${weight}</li>
+                            <li>Altura: ${height}</li> 
                         </ul>
                     </div>
 
                     <div class="habilidades">
                         <h3>Habilidades</h3>
                         <ul>
-                            <li>Choque do trovão</li>
-                            <li>Cabeçada</li>
+                            <li>${AbilitiesTypes[0]}</li>
+                            <li>${AbilitiesTypes[1]}</li>                       
                         </ul>
 
                     </div>
