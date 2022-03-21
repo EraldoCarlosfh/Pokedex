@@ -8,25 +8,108 @@ const generateHTML = pokemons => pokemons.reduce((accumulator, {
     id,
     types
 }) => {
+
     const ElementeTypes = types.map(typeInfo => typeInfo.type.name);
+    
+//     if (id == 1) {
+//         accumulator += `
+//         <div class="cartoes-pokemon">
+//     <div class="cartao-pokemon aberto ${ElementeTypes[0]}" id="cartao-${name}">
+//     <div class="cartao-topo">
+//     <div class="detalhes">
+//         <h2 class="nome">${name}</h2>
+//         <span>#${id}</span>
+//     </div>
+//         <span class="tipo">${ElementeTypes.join(' | ')}</span>
+
+//     <div class="cartao-imagem">
+//         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg" alt="Imagem do ${name}">
+//     </div>
+// </div>
+//                 <div class="cartao-informacoes">
+//                     <div class="status">
+//                         <h3>Status</h3>
+//                         <ul>
+//                             <li>HP: 300</li>
+//                             <li>Ataque: 600</li>
+//                             <li>Defesa: 500</li>
+//                             <li>Velocidade: 300</li>
+//                             <li>Total: 1.700</li>
+//                         </ul>
+//                     </div>
+
+//                     <div class="habilidades">
+//                         <h3>Habilidades</h3>
+//                         <ul>
+//                             <li>Choque do trovão</li>
+//                             <li>Cabeçada</li>
+//                         </ul>
+
+//                     </div>
+//                 </div>
+//             </div>   
+//             </div>
+
+//             <nav class="listagem">
+
+//                 <ul>
+//                     <li class="pokemon ativo" id="${id}">
+//                       <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg" alt="Cabeça do ${name}">
+//                       <span>${name}</span>
+//                     </li>
+//                 </ul>
+//             </nav>
+//   `;
+//     }
 
     accumulator += `
-      <li class="card ${ElementeTypes[0]}">
-      <img class="card-image" alt="${name}" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg" />
-        <h2 class="card-title">${id}. ${name}</h2>
-        <p class="card-subtitle">${ElementeTypes.join(' | ')}</p>
-      </li>
-    `;
+    <div class="cartoes-pokemon">
+    <div class="cartao-pokemon aberto ${ElementeTypes[0]}" id="cartao-${name}">
+    <div class="cartao-topo">
+    <div class="detalhes">
+        <h2 class="nome">${name}</h2>
+        <span>#${id}</span>
+    </div>
+        <span class="tipo">${ElementeTypes.join(' | ')}</span>
+
+    <div class="cartao-imagem">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg" alt="Imagem do ${name}">
+    </div>
+</div>
+                <div class="cartao-informacoes">
+                    <div class="status">
+                        <h3>Status</h3>
+                        <ul>
+                            <li>HP: 300</li>
+                            <li>Ataque: 600</li>
+                            <li>Defesa: 500</li>
+                            <li>Velocidade: 300</li>
+                            <li>Total: 1.700</li>
+                        </ul>
+                    </div>
+
+                    <div class="habilidades">
+                        <h3>Habilidades</h3>
+                        <ul>
+                            <li>Choque do trovão</li>
+                            <li>Cabeçada</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>   
+            </div>
+
+            
+  `;
+
 
     return accumulator;
 }, '')
 
 const insertPokemonsIntoPage = pokemons => {
-    const ul = document.querySelector('[data-js="pokedex"]');
+    const ul = document.querySelector('[data-js="pokemonsPokedex"]');
     ul.innerHTML = pokemons;
-
-    console.log(ul);
-    console.log(pokemons);
 }
 
 const pokemonPromises = generatePokemonsPromises();
