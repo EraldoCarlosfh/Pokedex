@@ -1,0 +1,174 @@
+TAG: string = 'ARAGUAINA TO ARAGUAINA TO';
+ROTA: string = 'MUNICIPAL';
+VALOR_TRANSPORTADO = 10000000;
+QTD_CAIXAS = 10;
+OP: string = 'EVE'
+MODAL: string = 'RODOVIARIO';
+dfMunicipal = {} as Municipal;  
+dfInterMunicipal = {} as InterMunicipal;
+
+
+this.VALOR_TRANSPORTADO = this.VALOR_TRANSPORTADO === 0 ?  this.VALOR_TRANSPORTADO : '';
+
+//Selecionar dados com a TAG
+
+    if (this.ROTA == 'MUNICIPAL') {
+     let dfMunicipal = this.dfMunicipal;
+     dfMunicipal = this.dfMunicipal.filter(x => x.CHAVE_VIAGEM == this.TAG);
+        
+        //Condições caso a rota seja atendida
+        this.dfMunicipal.forEach((x, i) => {            
+            
+            //Condição de atendimento
+            if (x.COND_ATENDIMENTO == 'Sim')  { 
+            
+                //Condição de atendimento
+                x.COND_ATEND = 'Sim';
+                
+                if (this.OP == 'EVE' || this.OP == 'ESP') {
+                
+                    //Quantidade de viagens
+                    x.QTD_VIAGENS = this.VALOR_TRANSPORTADO / x.LIMITE_CEDULAS;                   
+                   
+                    x.COND_ATEND = x.LIMITE_CEDULAS;
+                } else {
+                    x.QTD_VIAGENS = this.QTD_CAIXAS / x.LIMITE_CAIXAS;
+                    x.COND_ATEND = x.LIMITE_CAIXAS.toString() + ' caixas';
+                }  
+                
+                //Custo total
+                x.CUSTO_ADV = x.UNIT_ADV * this.VALOR_TRANSPORTADO; 
+                x.CUSTO_EMB = 0;
+                x.COND_TOTAL = x.CUSTO_ADV;
+                
+            //Condição caso a rota não seja atendida    
+            } else {
+                x.UNIT_ADV = 'Não atende';
+                x.COND_ATEND = 'Não atende';
+                x.QTD_VIAGENS = 'Não atende';
+                x.CUSTO_ADV = 'Não atende';
+                x.CUSTO_EMB = 'Não atende';
+                x.COND_TOTAL = 0;
+            }            
+        });    
+    } if (this.ROTA == 'INTERMUNICIPAL') {
+        let dfInterMunicipal = this.dfInterMunicipal;
+        dfInterMunicipal = this.dfInterMunicipal.filter(x => x.CHAVE_VIAGEM == this.TAG);
+         
+        this.dfMunicipal.forEach((x, i) => {          
+            
+            //Alterar limites de cédulas para os casos em que é possível alterar Ex: BRINKS
+            if (x.OBSERVACOES == 'A/T') 
+                x.LIMITE_CEDULAS = this.MODAL == 'RODOVIARIO' && this.VALOR_TRANSPORTADO < 20000000 ? 10000000 : x.LIMITE_CEDULAS;
+                                
+            //Condições de atendimento eventual  
+            if (this.OP == 'EVE') {
+                if (x.COND_ATENDIMENTO_EVE == 'Sim') {
+                
+                    //Condição de atendimento
+                    x.COND_ATEND = 'Sim';
+                    
+                    //Quantidade de viagens
+                    x.QTD_VIAGENS = this.VALOR_TRANSPORTADO / x.LIMITE_CEDULAS;
+                    
+                    //Custo advalorem
+                    x.CUSTO_ADV = X.UNIT_ADV * this.VALOR_TRANSPORTADO;
+                    
+                    //Custo de embarque
+                    if (x.OBSERVACOES === 'A')
+                        x.CUSTO_EMB = x.VL_AER_EVE * x.QTD_VIAGENS;
+                    else if (x.OBSERVACOES === 'A/T')
+                        if (this.VALOR_TRANSPORTADO < 20000000)
+                            if (this.MODAL == 'RODOVIARIO')
+                                x.CUSTO_EMB = x.UNIT_EMB_EVE * x.QTD_VIAGENS;                                
+                            else
+                                x.CUSTO_EMB = x.VL_AER_EVE * x.QTD_VIAGENS;
+                    else 
+                        x.CUSTO_EMB = x.UNIT_EMB_EMB_GERAL * x.QTD_VIAGENS;                  
+                    
+                        //Custo total
+                        x.CUSTO_EMB = x.UNIT_EMB_EVE_GERAL * x.QTD_VIAGENS;]
+                        x.COND_TOTAL = x.CUSTO_ADV + x.CUSTO_EMB;
+                        x.COND_ATEND = x.LIMITE_CEDULAS;                 
+                } else {
+                    x.UNIT_ADV = 'Não atende';
+                    x.COND_ATEND = 'Não atende';
+                    x.QTD_VIAGENS = 'Não atende';
+                    x.CUSTO_ADV = 'Não atende';
+                    x.CUSTO_EMB = 'Não atende';
+                    x.COND_TOTAL = 0;
+                    x.LIMITE_CEDULAS = 'Não aende';
+                }   
+
+            //Condições de atendimento especial  
+            } else if (this.OP == 'ESP') {    
+                if (x.COND_ATENDIMENTO_ESP == 'Sim') {
+                
+                    //Condição de atendimento
+                    x.COND_ATEND  = 'Sim';
+                    
+                    //Quantidade de viagens
+                    x.QTD_VIAGENS = this.VALOR_TRANSPORTADO / x.LIMITE_CEDULAS;
+                    
+                    //Custo de advalorem
+                    x.CUSTO_ADV = x.UNIT_ADV * this.VALOR_TRANSPORTADO;
+                    
+                    //Custo de embarque
+                    if (x.OBSERVACOES == 'A')
+                        x.CUSTO_EMB = x.VL_AER_EVE * x.QTD_VIAGENS;
+                    else if (x.OBSERVACOES == 'A/T')                        
+                        if (this.MODAL != '' && this.MODAL == 'RODOVIARIO' && this.VALOR_TRANSPORTADO < 20000000)
+                            x.CUSTO_EMB = x.UNIT_EMB_ESP * x.QTD_VIAGENS;
+                        else
+                            x.CUSTO_EMB = x.VL_AER_ESP * x.QTD_VIAGENS;
+                    else
+                        x.CUSTO_EMB = x.UNIT_EMB_ESP_GERAL * x.QTD_VIAGENS;                
+                
+                    // Custo Total
+                    x.COND_TOTAL = X.CUSTO_ADV + x.CUSTO_EMB;
+                    x.COND_ATEND = X.LIMITE_CEDULAS;
+                } else  {
+                    x.UNIT_ADV = 'Não atende';
+                    x.COND_ATEND = 'Não atende';
+                    x.QTD_VIAGENS = 'Não atende';
+                    x.CUSTO_ADV = 'Não atende';
+                    x.CUSTO_EMB = 'Não atende';
+                    x.COND_TOTAL = 0;
+                } 
+                
+            //Condições de atendimento de moedas      
+            } else if (this.OP == 'MO') {
+                if (x.COND_ATENDIMENTO_MOEDAS == 'Sim') {
+                    
+                    //Condição de atendimento
+                    x.COND_ATEND = 'Sim';
+                    
+                    //Quantidade de viagens
+                    x.QTD_VIAGENS = x.QTD_VIAGENS / x.LIMITE_CAIXAS;
+                    
+                    //Custo de advalorem
+                    x.CUSTO_ADV = x.UNIT_ADV * this.VALOR_TRANSPORTADO;
+                    
+                    //Custo de embarque
+                    if (x.FORNECEDOR == 'PROSEGUR')
+                        x.CUSTO_EMB = x.UNIT_CAIXA + x.QTD_VIAGENS;
+                    else if (x.FORNECEDOR == 'BRINKS' && this.QTD_CAIXAS / x.LIMITE_CAIXAS < 12)
+                        x.CUSTO_EMB = x.UNIT_CAIXA * this.QTD_CAIXAS + 0.85 * x.UNIT_EMB_EVE;
+                    else
+                        x.CUSTO_EMB = x.UNIT_CAIXA * this.QTD_CAIXAS;
+                        
+                    //Custo total
+                    x.COND_TOTAL = x.CUSTO_ADV + x.CUSTO_EMB;
+                    x.COND_ATEND = x.LIMITE_CAIXAS.toString() + ' caixas';
+
+                } else {
+                    x.UNIT_ADV = 'Não atende';
+                    x.COND_ATEND = 'Não atende';
+                    x.QTD_VIAGENS = 'Não atende';
+                    x.CUSTO_ADV = 'Não atende';
+                    x.CUSTO_EMB = 'Não atende';
+                    x.COND_TOTAL = 0;
+                }
+            }            
+        }); 
+    }           
